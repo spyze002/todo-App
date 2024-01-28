@@ -33,10 +33,30 @@ class _AddTodoState extends State<AddTodo> {
 
     // show user if the data is successfully submited or not
     if (response.statusCode == 201) {
-      print(response.body);
+      titleTitle.text = ''; //setting text fields to blank when data is sent
+      titleDescription.text = '';
+      showSuccessMessage(' Data Sent');
     } else {
-      print('error');
+      showErrorMessage('Something unexpected Occur');
     }
+  }
+
+  void showSuccessMessage(String message) {
+    final snackbar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
+  void showErrorMessage(String message) {
+    final snackbar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   @override
