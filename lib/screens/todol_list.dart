@@ -22,8 +22,15 @@ class _HomepageState extends State<Homepage> {
     final res = await http.delete(uri);
     if (res.statusCode == 200) {
       // remove item from the list
+      final filteredItem =
+          items.where((element) => element['_id'] != id).toList();
+      setState(() {
+        items = filteredItem;
+      });
+      showSuccessMessage('Item deleted');
     } else {
       //show error
+      showErrorMessage(' Deletion failed');
     }
   }
 
@@ -55,6 +62,24 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       isloading = false;
     });
+  }
+
+  void showSuccessMessage(String message) {
+    final snackbar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
+  void showErrorMessage(String message) {
+    final snackbar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   @override
