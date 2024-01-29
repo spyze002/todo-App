@@ -1,6 +1,10 @@
 # todo_app
 
-A new Flutter project.
+Built by ESUM BRANDON. O
+
+Inspired by general todo applications i use on daily bases, trying to recreate for learning purposes...
+
+
 
 ## Getting Started
 
