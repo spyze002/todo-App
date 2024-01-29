@@ -13,6 +13,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   List items = [];
+  bool isloading = true;
 
   @override
   void initState() {
@@ -38,9 +39,10 @@ class _HomepageState extends State<Homepage> {
       setState(() {
         items = result;
       });
-    } else {
-      // show error here
     }
+    setState(() {
+      isloading = false;
+    });
   }
 
   @override
@@ -49,21 +51,25 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(
         title: const Text("ToDo List "),
       ),
-      body: RefreshIndicator(
-        onRefresh: fetchTodo,
-        child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index] as Map;
-            return ListTile(
-              leading: CircleAvatar(
-                child: Text('${index + 1}'),
-              ),
-              title: Text(item['title']),
-              subtitle: Text(item['description']),
-            );
-          },
+      body: Visibility(
+        visible: isloading,
+        replacement: RefreshIndicator(
+          onRefresh: fetchTodo,
+          child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index] as Map;
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text('${index + 1}'),
+                ),
+                title: Text(item['title']),
+                subtitle: Text(item['description']),
+              );
+            },
+          ),
         ),
+        child: const Center(child: CircularProgressIndicator()),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: navigateTo,
