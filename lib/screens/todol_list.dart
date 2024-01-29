@@ -40,8 +40,21 @@ class _HomepageState extends State<Homepage> {
     fetchTodo();
   }
 
-// navigation route function
-  void navigateTo() {
+// navigation to add_todo
+  Future<void> navigateTo() async {
+    final route = MaterialPageRoute(
+      builder: (context) => const AddTodo(),
+    );
+    await Navigator.push(context, route);
+
+    setState(() {
+      isloading = true;
+    });
+    fetchTodo();
+  }
+
+  // Navigate to edit page
+  void navigateToEdit() {
     final route = MaterialPageRoute(
       builder: (context) => const AddTodo(),
     );
@@ -106,6 +119,7 @@ class _HomepageState extends State<Homepage> {
                 trailing: PopupMenuButton(onSelected: (value) {
                   if (value == 'edit') {
                     // Open edit page
+                    navigateToEdit();
                   } else if (value == 'delete') {
                     //delete items from todo list
                     deleteByID(id);
