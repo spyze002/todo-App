@@ -15,6 +15,18 @@ class _HomepageState extends State<Homepage> {
   List items = [];
   bool isloading = true;
 
+  Future<void> deleteByID(String id) async {
+    //; delete the item
+    final url = 'https://api.nstack.in/v1/todos/$id';
+    final uri = Uri.parse(url);
+    final res = await http.delete(uri);
+    if (res.statusCode == 200) {
+      // remove item from the list
+    } else {
+      //show error
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,12 +71,32 @@ class _HomepageState extends State<Homepage> {
             itemCount: items.length,
             itemBuilder: (context, index) {
               final item = items[index] as Map;
+              final id = item['_id'] as String;
               return ListTile(
                 leading: CircleAvatar(
                   child: Text('${index + 1}'),
                 ),
                 title: Text(item['title']),
                 subtitle: Text(item['description']),
+                trailing: PopupMenuButton(onSelected: (value) {
+                  if (value == 'edit') {
+                    // Open edit page
+                  } else if (value == 'delete') {
+                    //delete items from todo list
+                    deleteByID(id);
+                  }
+                }, itemBuilder: (context) {
+                  return const [
+                    PopupMenuItem(
+                      child: Text('Edit'),
+                      value: 'edit',
+                    ),
+                    PopupMenuItem(
+                      child: Text('Delete'),
+                      value: 'delete',
+                    )
+                  ];
+                }),
               );
             },
           ),
