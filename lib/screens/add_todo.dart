@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class AddTodo extends StatefulWidget {
-  const AddTodo({super.key});
+  final Map? todo;
+  const AddTodo({
+    super.key,
+    this.todo,
+  });
 
   @override
   State<AddTodo> createState() => _AddTodoState();
@@ -13,6 +17,8 @@ class AddTodo extends StatefulWidget {
 class _AddTodoState extends State<AddTodo> {
   TextEditingController titleTitle = TextEditingController();
   TextEditingController titleDescription = TextEditingController();
+
+  bool isEdit = false;
 
   Future<void> submitData() async {
     // get the data from form
@@ -60,10 +66,18 @@ class _AddTodoState extends State<AddTodo> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.todo != null) {
+      isEdit = true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Todo'),
+        title: Text(isEdit ? 'Edit Todo' : 'Add Todo'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
