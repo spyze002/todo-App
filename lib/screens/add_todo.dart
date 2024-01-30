@@ -94,11 +94,16 @@ class _AddTodoState extends State<AddTodo> {
     };
     final url = 'https://api.nstack.in/v1/todos/$id';
     final uri = Uri.parse(url);
-    final response = await http.post(
+    final response = await http.put(
       uri,
       body: jsonEncode(requestbody),
       headers: {'content-type': 'application/json'},
     );
+    if (response.statusCode == 200) {
+      showSuccessMessage(' Update Successful ');
+    } else {
+      showErrorMessage('Something unexpected Occur');
+    }
   }
 
   @override
