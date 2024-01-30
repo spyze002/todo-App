@@ -68,9 +68,37 @@ class _AddTodoState extends State<AddTodo> {
   @override
   void initState() {
     super.initState();
-    if (widget.todo != null) {
+    final sectodo = widget.todo;
+    if (sectodo != null) {
       isEdit = true;
+      final title = sectodo['title'];
+      final description = sectodo['description'];
+      titleTitle.text = title;
+      titleDescription.text = description;
     }
+  }
+
+  Future<void> updateData() async {
+    final todo = widget.todo;
+    if (todo == null) {
+      print('You can not update without Todo Data');
+      return;
+    }
+    final id = todo['_id'];
+    final title = titleTitle.text;
+    final description = titleDescription.text;
+    final requestbody = {
+      "title": title,
+      "description": description,
+      "is_completed": false,
+    };
+    final url = 'https://api.nstack.in/v1/todos/$id';
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(requestbody),
+      headers: {'content-type': 'application/json'},
+    );
   }
 
   @override
@@ -99,8 +127,8 @@ class _AddTodoState extends State<AddTodo> {
               height: 20,
             ),
             ElevatedButton(
-              onPressed: submitData,
-              child: const Text('Submit'),
+              onPressed: isEdit ? updateData : submitData,
+              child: Text(isEdit ? 'Update' : 'Submit'),
             ),
           ],
         ),

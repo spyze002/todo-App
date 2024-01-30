@@ -127,12 +127,12 @@ class _HomepageState extends State<Homepage> {
                 }, itemBuilder: (context) {
                   return const [
                     PopupMenuItem(
-                      child: Text('Edit'),
                       value: 'edit',
+                      child: Text('Edit'),
                     ),
                     PopupMenuItem(
-                      child: Text('Delete'),
                       value: 'delete',
+                      child: Text('Delete'),
                     )
                   ];
                 }),
