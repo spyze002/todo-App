@@ -54,11 +54,15 @@ class _HomepageState extends State<Homepage> {
   }
 
   // Navigate to edit page
-  void navigateToEdit(Map item) {
+  Future<void> navigateToEdit(Map item) async {
     final route = MaterialPageRoute(
       builder: (context) => AddTodo(todo: item),
     );
-    Navigator.push(context, route);
+    await Navigator.push(context, route);
+    setState(() {
+      isloading = true;
+    });
+    fetchTodo();
   }
 
   Future<void> fetchTodo() async {
@@ -105,39 +109,51 @@ class _HomepageState extends State<Homepage> {
         visible: isloading,
         replacement: RefreshIndicator(
           onRefresh: fetchTodo,
-          child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index] as Map;
-              final id = item['_id'] as String;
-              return ListTile(
-                leading: CircleAvatar(
-                  child: Text('${index + 1}'),
-                ),
-                title: Text(item['title']),
-                subtitle: Text(item['description']),
-                trailing: PopupMenuButton(onSelected: (value) {
-                  if (value == 'edit') {
-                    // Open edit page
-                    navigateToEdit(item);
-                  } else if (value == 'delete') {
-                    //delete items from todo list
-                    deleteByID(id);
-                  }
-                }, itemBuilder: (context) {
-                  return const [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Text('Edit'),
+          child: Visibility(
+            visible: items.isNotEmpty,
+            replacement: Center(
+              child: Text(
+                'No Todo item, click on the button to add todo',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index] as Map;
+                final id = item['_id'] as String;
+                return Card(
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Text('${index + 1}'),
                     ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Text('Delete'),
-                    )
-                  ];
-                }),
-              );
-            },
+                    title: Text(item['title']),
+                    subtitle: Text(item['description']),
+                    trailing: PopupMenuButton(onSelected: (value) {
+                      if (value == 'edit') {
+                        // Open edit page
+                        navigateToEdit(item);
+                      } else if (value == 'delete') {
+                        //delete items from todo list
+                        deleteByID(id);
+                      }
+                    }, itemBuilder: (context) {
+                      return const [
+                        PopupMenuItem(
+                          value: 'edit',
+                          child: Text('Edit'),
+                        ),
+                        PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Delete'),
+                        )
+                      ];
+                    }),
+                  ),
+                );
+              },
+            ),
           ),
         ),
         child: const Center(child: CircularProgressIndicator()),
